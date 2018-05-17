@@ -16,9 +16,11 @@ import weka.filters.unsupervised.attribute.Remove;
 public class Tree {
 	Instances data;
 	 Evaluation eval;
+	 J48 tree;
 	
-	public Tree() throws Exception {
-	 DataSource source = new DataSource("/usr/users2/2015/up201504779/eclipse-workspace/IART/src/class_especie.arff");
+	public Tree(boolean prun) throws Exception {
+		System.out.println(prun);
+	 DataSource source = new DataSource("class_especie.arff");
 	  data = source.getDataSet();
 
 	 
@@ -53,18 +55,23 @@ public class Tree {
 	 filter.setInvertSelection(true); 
 	 Instances train = Filter.useFilter(data, filter);
 	 // invert the selection to get other data 
-	 Classifier cls = new J48();
-	 cls.buildClassifier(train);
+	  tree = new J48();
+	  tree.setUnpruned(true);
+	 tree.buildClassifier(train);
 	 // evaluate classifier and print some statistics
 	 eval = new Evaluation(train);
 	 
-	 eval.evaluateModel(cls, test);
+	 eval.evaluateModel(tree, test);
 	
 	
-	// System.out.println(cls.toString());
+	// System.out.println(tree.toString());
 	
   }
 	
+	public J48 getTree() {
+		return tree;
+	}
+
 	public String getResults() throws Exception {
 		String temp="";
 		 temp+=data.toSummaryString();
@@ -73,14 +80,14 @@ public class Tree {
 		 temp+='\n';
 		 temp+=eval.toMatrixString("\nMatrix\n======\n");
 		 temp+='\n';
+		 temp+=tree.toString();
 		 temp+=eval.toClassDetailsString("\nClass Details\n======\n");
 		 temp+='\n';
-		 System.out.println(temp);
 		 return temp; 
 	}
 	
 	public static void main(String [] args) throws Exception {
-		Tree t = new Tree();
+		Tree t = new Tree(false);
 		t.getResults();
 	}
 }
