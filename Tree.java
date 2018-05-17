@@ -14,10 +14,12 @@ import weka.filters.supervised.instance.StratifiedRemoveFolds;
 import weka.filters.unsupervised.attribute.Remove;
  
 public class Tree {
+	Instances data;
+	 Evaluation eval;
 	
 	public Tree() throws Exception {
-	 DataSource source = new DataSource("/home/trocatudo/Transferências/class_genero.arff");
-	 Instances data = source.getDataSet();
+	 DataSource source = new DataSource("/usr/users2/2015/up201504779/eclipse-workspace/IART/src/class_especie.arff");
+	  data = source.getDataSet();
 
 	 
 	
@@ -31,7 +33,7 @@ public class Tree {
 	 // set options for creating the subset of data
 	 String[] options = new String[6];
 
-	 options[0] = "-N";                 // indicate we want to set the number of folds                        
+	 options[0] = "-N";                 // indicate we want to set the number of folds                       
 	 options[1] = Integer.toString(5);  // split the data into five random folds
 	 options[2] = "-F";                 // indicate we want to select a specific fold
 	 options[3] = Integer.toString(1);  // select the first fold
@@ -54,19 +56,31 @@ public class Tree {
 	 Classifier cls = new J48();
 	 cls.buildClassifier(train);
 	 // evaluate classifier and print some statistics
-	 Evaluation eval = new Evaluation(train);
+	 eval = new Evaluation(train);
 	 
 	 eval.evaluateModel(cls, test);
-	 System.out.println(data.toSummaryString());
-	 System.out.println(eval.toSummaryString("\nResults\n======\n", false));
-	 System.out.println(eval.toMatrixString("\nMatrix\n======\n"));
-	 System.out.println(eval.toClassDetailsString("\nClass Details\n======\n"));
+	
 	
 	// System.out.println(cls.toString());
 	
   }
 	
+	public String getResults() throws Exception {
+		String temp="";
+		 temp+=data.toSummaryString();
+		 temp+='\n';
+		 temp+=eval.toSummaryString("\nResults\n======\n", false);
+		 temp+='\n';
+		 temp+=eval.toMatrixString("\nMatrix\n======\n");
+		 temp+='\n';
+		 temp+=eval.toClassDetailsString("\nClass Details\n======\n");
+		 temp+='\n';
+		 System.out.println(temp);
+		 return temp; 
+	}
+	
 	public static void main(String [] args) throws Exception {
 		Tree t = new Tree();
+		t.getResults();
 	}
 }
