@@ -34,6 +34,8 @@ public class App2 {
 
 	private JFrame frame;
 	private static JCheckBox chckbxPrunned;
+	private static JComboBox comboBox;
+	private static JComboBox comboBox_1;
 
 	/**
 	 * Launch the application.
@@ -73,10 +75,10 @@ public class App2 {
 		frame.getContentPane().add(chckbxPrunned);
 		
 		JLabel lblNewLabel = new JLabel("Anuran classifier trough Anuran Calls");
-		lblNewLabel.setBounds(107, 6, 217, 50);
+		lblNewLabel.setBounds(100, 6, 300, 50);
 		frame.getContentPane().add(lblNewLabel);
 		
-		JComboBox comboBox = new JComboBox();
+		 comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Family", "Genus", "Species"}));
 		comboBox.setBounds(33, 161, 129, 23);
 		frame.getContentPane().add(comboBox);
@@ -86,19 +88,19 @@ public class App2 {
 		frame.getContentPane().add(lblChooseTheClass);
 		
 		JLabel lblCAlgorithTo = new JLabel("C4.5 algorith to generate a decision tree");
-		lblCAlgorithTo.setBounds(96, 38, 228, 44);
+		lblCAlgorithTo.setBounds(90, 38, 300, 44);
 		frame.getContentPane().add(lblCAlgorithTo);
 		
 		JLabel lblChooseThePercentage = new JLabel("Choose the percentage of the data");
-		lblChooseThePercentage.setBounds(238, 94, 200, 50);
+		lblChooseThePercentage.setBounds(210, 94, 240, 50);
 		frame.getContentPane().add(lblChooseThePercentage);
 		
 		JLabel lblToUseTo = new JLabel("to use to train the tree:");
-		lblToUseTo.setBounds(272, 118, 129, 50);
+		lblToUseTo.setBounds(260, 118, 170, 50);
 		frame.getContentPane().add(lblToUseTo);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"50%", "60%", "70%", "80%", "90%"}));
+		 comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"50%", "66%", "75%", "83%", "85%", "87,5%","88,9%","90%"}));
 		comboBox_1.setBounds(282, 161, 92, 23);
 		frame.getContentPane().add(comboBox_1);
         
@@ -110,7 +112,11 @@ public class App2 {
 				try {
 					
 					boolean prun=App2.chckbxPrunned.isSelected();
-					Tree t = new Tree(prun);
+					String combo= (String)App2.comboBox.getSelectedItem();
+					int number_folds=App2.comboBox_1.getSelectedIndex()+2;
+		
+					
+					Tree t = new Tree(prun,combo,number_folds);
 					String result=t.getResults();
 					JPanel middlePanel = new JPanel ();
 				    middlePanel.setBorder ( new TitledBorder ( new EtchedBorder (), "Results" ) );
@@ -126,13 +132,14 @@ public class App2 {
 				    //Add Textarea in to middle panel
 				    middlePanel.add ( scroll );
 
-				    // My code
+				    //panel results
 				    JFrame frame = new JFrame ();
 				    frame.getContentPane().add ( middlePanel );
 				    frame.pack ();
 				    frame.setLocationRelativeTo ( null );
 				    frame.setVisible ( true );
 				    
+				    //tree view
 				    JFrame jf = new javax.swing.JFrame("Tree view");
 	                jf.setSize(1920,1080);
 	                jf.getContentPane().setLayout(new BorderLayout());
@@ -151,7 +158,6 @@ public class App2 {
 	                tv.fitToScreen();
 					
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				

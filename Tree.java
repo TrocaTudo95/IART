@@ -1,26 +1,27 @@
 package weka;
-import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 
 import weka.filters.Filter;
 import weka.filters.supervised.instance.StratifiedRemoveFolds;
-import weka.filters.unsupervised.attribute.Remove;
  
 public class Tree {
 	Instances data;
 	 Evaluation eval;
 	 J48 tree;
 	
-	public Tree(boolean prun) throws Exception {
-		System.out.println(prun);
-	 DataSource source = new DataSource("class_especie.arff");
+	public Tree(boolean prun, String classifier_attr,int division) throws Exception {
+		 DataSource source ;
+	if(classifier_attr.equals("Family"))
+		source=new DataSource("class_familia.arff");
+	else if(classifier_attr.equals("Species"))
+	  source = new DataSource("class_especie.arff");
+	else
+		source=new DataSource("class_genero.arff");
+	
 	  data = source.getDataSet();
 
 	 
@@ -36,7 +37,7 @@ public class Tree {
 	 String[] options = new String[6];
 
 	 options[0] = "-N";                 // indicate we want to set the number of folds                       
-	 options[1] = Integer.toString(5);  // split the data into five random folds
+	 options[1] = Integer.toString(division);  // split the data into n random folds
 	 options[2] = "-F";                 // indicate we want to select a specific fold
 	 options[3] = Integer.toString(1);  // select the first fold
 	 options[4] = "-S";                 // indicate we want to set the random seed
@@ -56,7 +57,7 @@ public class Tree {
 	 Instances train = Filter.useFilter(data, filter);
 	 // invert the selection to get other data 
 	  tree = new J48();
-	  tree.setUnpruned(true);
+	  tree.setUnpruned(prun);
 	 tree.buildClassifier(train);
 	 // evaluate classifier and print some statistics
 	 eval = new Evaluation(train);
@@ -87,7 +88,7 @@ public class Tree {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		Tree t = new Tree(false);
+		Tree t = new Tree(false,"family",5);
 		t.getResults();
 	}
 }
