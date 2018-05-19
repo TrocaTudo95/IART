@@ -1,4 +1,6 @@
 package weka;
+import java.util.ArrayList;
+
 import weka.classifiers.Evaluation;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
@@ -13,7 +15,7 @@ public class Tree {
 	 Evaluation eval;
 	 J48 tree;
 	
-	public Tree(boolean prun, String classifier_attr,int division) throws Exception {
+	public Tree(boolean prun, String classifier_attr,int division,boolean reduced_error_prunning,boolean confidence, float confidence_perc) throws Exception {
 		 DataSource source ;
 	if(classifier_attr.equals("Family"))
 		source=new DataSource("class_familia.arff");
@@ -58,6 +60,19 @@ public class Tree {
 	 // invert the selection to get other data 
 	  tree = new J48();
 	  tree.setUnpruned(prun);
+	  ArrayList<String> tree_options= new ArrayList();
+	  if(reduced_error_prunning && !prun) {
+		  tree_options.add("-R");
+		  System.out.println("reduced error");
+	  }
+	  else if(confidence&& !prun && confidence_perc>0 && confidence_perc <=0.5 ) {
+		  System.out.println("confidence");
+		  tree_options.add("-C");
+		  tree_options.add("0.1");
+	  }
+	  
+	  
+	  tree.setOptions(tree_options.toArray(new String[0]));
 	 tree.buildClassifier(train);
 	 // evaluate classifier and print some statistics
 	 eval = new Evaluation(train);
@@ -88,7 +103,7 @@ public class Tree {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		Tree t = new Tree(false,"family",5);
+		Tree t = new Tree(false,"family",5,false,false,0);
 		t.getResults();
 	}
 }

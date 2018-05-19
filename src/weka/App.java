@@ -30,12 +30,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.JScrollBar;
 
-public class App2 {
+public class App {
 
 	private JFrame frame;
 	private static JCheckBox chckbxPrunned;
+	private static JCheckBox chckbxConfidence;
+	private static JCheckBox chckbxReduced;
 	private static JComboBox comboBox;
 	private static JComboBox comboBox_1;
+	private JTextField confidence;
 
 	/**
 	 * Launch the application.
@@ -44,7 +47,7 @@ public class App2 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					App2 window = new App2();
+					App window = new App();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +59,7 @@ public class App2 {
 	/**
 	 * Create the application.
 	 */
-	public App2() {
+	public App() {
 		initialize();
 	}
 
@@ -71,37 +74,45 @@ public class App2 {
 		frame.setResizable(false);
 		
 		chckbxPrunned = new JCheckBox("Unpruned");
-		chckbxPrunned.setBounds(33, 94, 129, 23);
+		chckbxPrunned.setBounds(33, 94, 200, 23);
 		frame.getContentPane().add(chckbxPrunned);
 		
+		chckbxConfidence = new JCheckBox("Pruning confidence");
+		chckbxConfidence.setBounds(33, 70, 170, 23);
+		frame.getContentPane().add(chckbxConfidence);
+		
 		JLabel lblNewLabel = new JLabel("Anuran classifier trough Anuran Calls");
-		lblNewLabel.setBounds(100, 6, 300, 50);
+		lblNewLabel.setBounds(100, -10, 300, 50);
 		frame.getContentPane().add(lblNewLabel);
 		
 		 comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Family", "Genus", "Species"}));
-		comboBox.setBounds(33, 161, 129, 23);
+		comboBox.setBounds(40, 191, 129, 23);
 		frame.getContentPane().add(comboBox);
 		
 		JLabel lblChooseTheClass = new JLabel("Choose the classifier:");
-		lblChooseTheClass.setBounds(33, 118, 154, 50);
+		lblChooseTheClass.setBounds(33, 151, 154, 50);
 		frame.getContentPane().add(lblChooseTheClass);
 		
 		JLabel lblCAlgorithTo = new JLabel("C4.5 algorith to generate a decision tree");
-		lblCAlgorithTo.setBounds(90, 38, 300, 44);
+		lblCAlgorithTo.setBounds(90, 10, 300, 44);
 		frame.getContentPane().add(lblCAlgorithTo);
 		
-		JLabel lblChooseThePercentage = new JLabel("Choose the percentage of the data");
-		lblChooseThePercentage.setBounds(210, 94, 240, 50);
+		JLabel lblChooseThePercentage = new JLabel("Choose the percentage");
+		lblChooseThePercentage.setBounds(250, 110, 250, 50);
 		frame.getContentPane().add(lblChooseThePercentage);
+			
+		JLabel label = new JLabel("of the data to use");
+		label.setBounds(270, 130, 250, 50);
+		frame.getContentPane().add(label);
 		
-		JLabel lblToUseTo = new JLabel("to use to train the tree:");
-		lblToUseTo.setBounds(260, 118, 170, 50);
+		JLabel lblToUseTo = new JLabel("to train the tree:");
+		lblToUseTo.setBounds(276, 150, 170, 50);
 		frame.getContentPane().add(lblToUseTo);
 		
 		 comboBox_1 = new JComboBox();
 		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"50%", "66%", "75%", "83%", "85%", "87,5%","88,9%","90%"}));
-		comboBox_1.setBounds(282, 161, 92, 23);
+		comboBox_1.setBounds(290, 191, 92, 23);
 		frame.getContentPane().add(comboBox_1);
         
 		
@@ -111,12 +122,16 @@ public class App2 {
 			public void mouseClicked(MouseEvent e) {
 				try {
 					
-					boolean prun=App2.chckbxPrunned.isSelected();
-					String combo= (String)App2.comboBox.getSelectedItem();
-					int number_folds=App2.comboBox_1.getSelectedIndex()+2;
+					boolean prun=App.chckbxPrunned.isSelected();
+					String combo= (String)App.comboBox.getSelectedItem();
+					int number_folds=App.comboBox_1.getSelectedIndex()+2;
+					boolean reduced=App.chckbxReduced.isSelected();
+					boolean conf=App.chckbxConfidence.isSelected();
 		
+					String temp=confidence.getText();
+				
 					
-					Tree t = new Tree(prun,combo,number_folds);
+					Tree t = new Tree(prun,combo,number_folds,reduced,conf,Float.parseFloat(temp));
 					String result=t.getResults();
 					JPanel middlePanel = new JPanel ();
 				    middlePanel.setBorder ( new TitledBorder ( new EtchedBorder (), "Results" ) );
@@ -163,8 +178,20 @@ public class App2 {
 				
 			}
 		});
-		btnGenerate.setBounds(107, 196, 200, 50);
+		btnGenerate.setBounds(111, 240, 200, 50);
 		frame.getContentPane().add(btnGenerate);
+		
+		 chckbxReduced = new JCheckBox("Reduced error prunning");
+		 chckbxReduced.setBounds(33, 121, 200, 23);
+		frame.getContentPane().add(chckbxReduced);
+		
+		confidence = new JTextField();
+		confidence.setBounds(216, 70, 30, 20);
+		frame.getContentPane().add(confidence);
+		confidence.setColumns(10);
+		confidence.setText("0");
+		
+
 		
 
 		
