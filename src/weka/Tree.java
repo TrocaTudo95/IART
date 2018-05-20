@@ -68,11 +68,13 @@ public class Tree {
 	  else if(confidence&& !prun && confidence_perc>0 && confidence_perc <=0.5 ) {
 		  System.out.println("confidence");
 		  tree_options.add("-C");
-		  tree_options.add("0.1");
+		  String temp=""+confidence_perc;
+		  tree_options.add(temp);
 	  }
 	  
 	  
 	  tree.setOptions(tree_options.toArray(new String[0]));
+	  
 	 tree.buildClassifier(train);
 	 // evaluate classifier and print some statistics
 	 eval = new Evaluation(train);
