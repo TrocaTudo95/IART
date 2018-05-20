@@ -59,21 +59,24 @@ public class Tree {
 	 Instances train = Filter.useFilter(data, filter);
 	 // invert the selection to get other data 
 	  tree = new J48();
+	  System.out.println(prun);
 	  tree.setUnpruned(prun);
 	  ArrayList<String> tree_options= new ArrayList();
 	  if(reduced_error_prunning && !prun) {
 		  tree_options.add("-R");
 		  System.out.println("reduced error");
+		  tree.setOptions(tree_options.toArray(new String[0]));
 	  }
-	  else if(confidence&& !prun && confidence_perc>0 && confidence_perc <=0.5 ) {
+	  else if(confidence && !prun && confidence_perc>0 && confidence_perc <=0.5 ) {
 		  System.out.println("confidence");
 		  tree_options.add("-C");
 		  String temp=""+confidence_perc;
 		  tree_options.add(temp);
+		  tree.setOptions(tree_options.toArray(new String[0]));
 	  }
 	  
 	  
-	  tree.setOptions(tree_options.toArray(new String[0]));
+
 	  
 	 tree.buildClassifier(train);
 	 // evaluate classifier and print some statistics
