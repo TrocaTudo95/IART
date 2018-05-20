@@ -68,7 +68,7 @@ public class App {
 	 */
 	private void initialize() {
 		frame = new JFrame("IART-FEUP classificador de anuros");
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
